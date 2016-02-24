@@ -20,6 +20,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Answer:", answer)
+	for _, base := range []int{2, 8, 10, 16} {
+		fmt.Println("Signed answer in base", base, "is  ", answer.BaseStringSigned(base))
+		fmt.Println("Unsigned answer in base", base, "is", answer.BaseStringUnsigned(base))
+	}
 	fmt.Println("Overflow:", overflow)
 }

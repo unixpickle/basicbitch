@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"math/big"
+	"strconv"
 	"strings"
 )
 
@@ -156,4 +157,65 @@ func (n Number) Equal(n1 Number) bool {
 		}
 	}
 	return true
+}
+
+// BigIntSigned returns a big integer representation of this signed number.
+func (n Number) BigIntSigned() *big.Int {
+	if n[len(n)-1] {
+		res := n.Neg().BigIntSigned()
+		res.Neg(res)
+		return res
+	}
+	var r big.Int
+	place := big.NewInt(1)
+	two := big.NewInt(2)
+	for _, x := range n {
+		if x {
+			r.Add(&r, place)
+		}
+		place.Mul(place, two)
+	}
+	return &r
+}
+
+// BigIntUnsigned returns a big integer representation of this unsigned number.
+func (n Number) BigIntUnsigned() *big.Int {
+	var r big.Int
+	place := big.NewInt(1)
+	two := big.NewInt(2)
+	for _, x := range n {
+		if x {
+			r.Add(&r, place)
+		}
+		place.Mul(place, two)
+	}
+	return &r
+}
+
+// BaseStringSigned returns a string representation of this number in the given base.
+// The receiver is treated as a signed number.
+// Allowed bases are 2, 8, 10, and 16.
+func (n Number) BaseStringSigned(b int) string {
+	res := n.BigIntSigned().Text(b)
+	prefix, ok := map[int]string{2: "0b", 8: "0", 10: "", 16: "0x"}[b]
+	if !ok {
+		panic("unknown base: " + strconv.Itoa(b))
+	}
+	if strings.HasPrefix(res, "-") {
+		return res[:1] + prefix + res[1:]
+	} else {
+		return prefix + res
+	}
+}
+
+// BaseStringUnsigned returns a string representation of this number in the given base.
+// The receiver is treated as a signed number.
+// Allowed bases are 2, 8, 10, and 16.
+func (n Number) BaseStringUnsigned(b int) string {
+	res := n.BigIntUnsigned().Text(b)
+	prefix, ok := map[int]string{2: "0b", 8: "0", 10: "", 16: "0x"}[b]
+	if !ok {
+		panic("unknown base: " + strconv.Itoa(b))
+	}
+	return prefix + res
 }
