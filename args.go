@@ -56,6 +56,6 @@ func ParseArgs() (op1 Number, op2 Number, op string) {
 func dieUsage() {
 	fmt.Fprintf(os.Stderr, "Usage: %s [flags] <operand> [<operation> <operand>]\n"+
 		"\nAvailable flags are:\n\n"+
-		"-bits <int>      the bit size to use for operands", os.Args[0])
+		"-bits <int>      the bit size to use for operands\n\n", os.Args[0])
 	os.Exit(1)
 }
