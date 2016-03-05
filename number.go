@@ -162,7 +162,7 @@ func (n Number) Equal(n1 Number) bool {
 // BigIntSigned returns a big integer representation of this signed number.
 func (n Number) BigIntSigned() *big.Int {
 	if n[len(n)-1] {
-		res := n.Neg().BigIntSigned()
+		res := n.Neg().BigIntUnsigned()
 		res.Neg(res)
 		return res
 	}
